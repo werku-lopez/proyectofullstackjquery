@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/sweetalert.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Peliflix 2.2</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="home.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Series
+              </a>
+              <ul class="dropdown-menu" id="series"></ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Personajes
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="Modificar.html">Modificar</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="CrearPersonaje.html"
+                    >Crear nuevo</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h1>Crear Personaje</h1>
+      <hr />
+      <form class="pt-4">
+        <div class="col">
+          <button id="btn-guardar" class="btn btn-primary">Guardar</button>
+        </div>
+
+        <div class="row g-3 pt-5">
+          <div class="col">
+            <label for="nombrePersonaje">Personajes:</label>
+            <input
+              type="text"
+              id="nombrePersonaje"
+              class="form-control"
+              placeholder="nombre.."
+            />
+          </div>
+          <div class="col">
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" placeholder="imgaen" />
+          </div>
+          <div class="col">
+            <label for="seriesSelect">Serie:</label>
+            <select id="seriesSelect" class="form-control"></select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script src="js/jquery365.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script>
+      var url = "https://apiseriespersonajes.azurewebsites.net/";
+      $(document).ready(function () {
+        loadSeries();
+
+        $("#btn-guardar").click(function (e) {
+          e.preventDefault();
+
+          var idSerie = parseInt($("#seriesSelect").val());
+          var nombre = $("#nombrePersonaje").text();
+          var imagen = $("#imagen").val();
+
+          console.log(imagen);
+
+          var personaje = new Object();
+
+          personaje.idSerie = idSerie;
+          personaje.nombre = nombre;
+          personaje.imagen = imagen;
+
+          var dataJSON = JSON.stringify(personaje);
+          var request = "api/personajes";
+
+          $.ajax({
+            method: "POST",
+            url: url + request,
+            contentType: "application/json",
+            data: dataJSON,
+            success: function () {
+              Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: "Registrado correctamente",
+                timer: 1500,
+              });
+              setTimeout(function () {
+                window.location.href = "home.html";
+              }, 1500);
+            },
+          });
+        });
+      });
+
+      function loadSeries() {
+        var request = "api/series";
+
+        $.getJSON(url + request, function (data) {
+          var html = "";
+
+          $.each(data, function (index, serie) {
+            html += `
+                <option value="${serie.idSerie}"> ${serie.nombre}</option>
+                `;
+          });
+          $("#seriesSelect").html(html);
+        });
+      }
+    </script>
+  </body>
+</html>

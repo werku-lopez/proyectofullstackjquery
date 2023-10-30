@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/sweetalert.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Peliflix 2.2</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="home.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Series
+              </a>
+              <ul class="dropdown-menu" id="series"></ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Personajes
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="Modificar.html">Modificar</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="CrearPersonaje.html"
+                    >Crear nuevo</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container pt-5">
+      <div class="text-center">
+        <h1>Bienvenido a Peliflix 2.2</h1><hr/>
+      </div>
+    </div>
+
+    <script src="js/jquery365.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script>
+      var url = "https://apiseriespersonajes.azurewebsites.net/";
+      $(document).ready(function () {
+        loadSeries();
+      });
+
+      function loadSeries() {
+        var request = "api/series";
+
+        $.getJSON(url + request, function (data) {
+          var html = "";
+          var miUrl = "http://127.0.0.1:5500/";
+
+          $.each(data, function (index, serie) {
+            html += `
+                <li><a class="dropdown-item" href="${miUrl}Serie.html?idserie=${serie.idSerie}">${serie.nombre}</a></li>
+                `;
+          });
+          $("#series").html(html);
+        });
+      }
+    </script>
+  </body>
+</html>
